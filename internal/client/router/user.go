@@ -33,7 +33,7 @@ func RegisterUserRoutes(r *gin.Engine, d Deps) {
 	// Login required.
 	user := v1.Group("/user", requireAppAuth(d))
 	{
-		user.POST("/me", d.UserHandler.Me)
-		user.POST("/profile", d.UserHandler.UpdateProfile)
+		user.GET("/me", d.UserHandler.Me)
+		user.GET("/profile", d.UserHandler.UpdateProfile)
 	}
 }

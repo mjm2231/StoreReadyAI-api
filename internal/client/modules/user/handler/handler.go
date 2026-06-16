@@ -49,10 +49,12 @@ func (h *UserHandler) Me(c *gin.Context) {
 
 	// 先返回鉴权上下文中的最小用户信息，保证登录闭环可用。
 	// 后续 service/repo 完善后，可在这里改为 h.userSvc.GetMe(ctx, tenantID, userID)。
-	response.WriteOK(c, gin.H{
-		"tenant_id": tenantID,
-		"user_id":   userID,
-	}, getRID(c))
+	u, err := h.userSvc.GetUserByID(c.Request.Context(), tenantID, userID)
+	if err != nil {
+		response.AbortFail(c, http.StatusInternalServerError, 500, "获取用户信息失败", getRID(c))
+		return
+	}
+	response.WriteOK(c, u, getRID(c))
 }
 
 type updateProfileReq struct {
