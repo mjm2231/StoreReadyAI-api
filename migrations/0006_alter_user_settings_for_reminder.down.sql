@@ -1,0 +1,5 @@
+-- ALTER TABLE `user_settings`
+--   DROP INDEX `idx_settings_sync`,
+--   ADD KEY `idx_settings_updated` (`tenant_id`,`user_id`,`updated_at`),
+--   DROP COLUMN `default_notify_time`,
+--   DROP COLUMN `deleted_at`;

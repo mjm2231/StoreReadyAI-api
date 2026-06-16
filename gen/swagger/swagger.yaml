@@ -1,0 +1,1938 @@
+definitions:
+  dto.AccountLoginReq:
+    properties:
+      device_id:
+        description: 可选：用于多端 refresh token 管理
+        type: string
+      device_name:
+        description: 可选
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.AccountLoginResp:
+    properties:
+      entitlement:
+        $ref: '#/definitions/entitlement.Entitlement'
+      server_now:
+        type: integer
+      token:
+        $ref: '#/definitions/internal_client_modules_user_dto.TokenPair'
+      user:
+        $ref: '#/definitions/user.UserVO'
+    type: object
+  dto.AccountRegisterReq:
+    properties:
+      device_id:
+        description: 可选：用于多端 refresh token 管理
+        type: string
+      device_name:
+        description: 可选
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.AccountRegisterResp:
+    properties:
+      entitlement:
+        $ref: '#/definitions/entitlement.Entitlement'
+      server_now:
+        type: integer
+      token:
+        $ref: '#/definitions/internal_client_modules_user_dto.TokenPair'
+      user:
+        $ref: '#/definitions/user.UserVO'
+    type: object
+  dto.BillingConfigReq:
+    properties:
+      platform:
+        type: string
+    required:
+    - platform
+    type: object
+  dto.BillingConfigResp:
+    properties:
+      products:
+        items:
+          $ref: '#/definitions/dto.BillingProductVO'
+        type: array
+      recommended_product_code:
+        type: string
+    type: object
+  dto.BillingOrderVO:
+    properties:
+      acknowledged:
+        type: boolean
+      amount_micros:
+        type: integer
+      auto_renewing:
+        type: boolean
+      base_plan_id:
+        type: string
+      created_at:
+        type: integer
+      currency:
+        type: string
+      expire_time:
+        type: integer
+      id:
+        type: integer
+      last_verified_at:
+        type: integer
+      order_id:
+        type: string
+      original_order_id:
+        type: string
+      platform:
+        type: string
+      product_id:
+        type: string
+      purchase_state:
+        type: string
+      purchase_time:
+        type: integer
+      subscription_id:
+        type: string
+      updated_at:
+        type: integer
+      verify_error_code:
+        type: string
+      verify_error_message:
+        type: string
+      verify_status:
+        type: string
+    type: object
+  dto.BillingProductVO:
+    properties:
+      id:
+        type: integer
+      is_recommended:
+        type: boolean
+      platform:
+        type: string
+      product_code:
+        type: string
+      product_type:
+        type: string
+      sort:
+        type: integer
+      status:
+        type: integer
+      store_product_id:
+        type: string
+      subscription_group:
+        type: string
+      title:
+        type: string
+    type: object
+  dto.ClientEventItemReq:
+    properties:
+      app_version:
+        type: string
+      build_number:
+        type: string
+      device_id:
+        type: string
+      device_model:
+        type: string
+      event_code:
+        type: string
+      event_group:
+        type: string
+      event_id:
+        type: string
+      event_message:
+        type: string
+      event_name:
+        type: string
+      event_source:
+        type: string
+      network_type:
+        type: string
+      os_version:
+        type: string
+      package_name:
+        type: string
+      payload:
+        type: string
+      platform:
+        type: string
+      store_available:
+        type: boolean
+    required:
+    - event_group
+    - event_id
+    - event_name
+    - platform
+    type: object
+  dto.ClientEventResp:
+    properties:
+      app_version:
+        type: string
+      build_number:
+        type: string
+      created_at:
+        type: integer
+      device_id:
+        type: string
+      device_model:
+        type: string
+      event_code:
+        type: string
+      event_group:
+        type: string
+      event_id:
+        type: string
+      event_message:
+        type: string
+      event_name:
+        type: string
+      event_source:
+        type: string
+      id:
+        type: integer
+      network_type:
+        type: string
+      os_version:
+        type: string
+      package_name:
+        type: string
+      payload:
+        type: string
+      platform:
+        type: string
+      received_at:
+        type: integer
+      store_available:
+        type: boolean
+      tenant_id:
+        type: integer
+      uid:
+        type: integer
+    type: object
+  dto.CreateFeedbackReq:
+    properties:
+      category:
+        description: 反馈分类：1普通反馈 2问题报错 3功能建议 4支付订阅 5账号登录 6其他
+        type: integer
+      contact:
+        description: 用户联系方式：邮箱/手机号/其他
+        maxLength: 128
+        type: string
+      content:
+        description: 反馈内容
+        maxLength: 5000
+        minLength: 1
+        type: string
+      extra:
+        description: 扩展信息JSON字符串，如页面路径、截图URL、错误日志ID等
+        type: string
+      title:
+        description: 反馈标题，客户端可选填
+        maxLength: 128
+        type: string
+    required:
+    - content
+    type: object
+  dto.DeleteFeedbackReq:
+    properties:
+      id:
+        description: 反馈ID
+        type: integer
+    required:
+    - id
+    type: object
+  dto.DeviceItem:
+    properties:
+      app_version:
+        type: string
+      created_at:
+        type: integer
+      device_id:
+        type: string
+      device_name:
+        type: string
+      id:
+        type: integer
+      last_seen_at:
+        type: integer
+      last_sync_at:
+        type: integer
+      platform:
+        type: integer
+      push_token:
+        type: string
+      status:
+        description: 1=active,2=revoked
+        type: integer
+      tenant_id:
+        type: integer
+      updated_at:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  dto.EntitlementResp:
+    properties:
+      auto_renew:
+        type: boolean
+      entitlement_code:
+        description: Billing 展示字段。
+        type: string
+      expires_at:
+        type: integer
+      free_limit:
+        type: integer
+      is_vip:
+        description: App 统一权益字段。
+        type: integer
+      platform:
+        type: string
+      product_code:
+        type: string
+      product_id:
+        type: string
+      status:
+        type: string
+      sync_enabled:
+        type: boolean
+      unlimited_subscriptions:
+        type: boolean
+      vip_expired_at:
+        type: integer
+      vip_started_at:
+        type: integer
+    type: object
+  dto.FeedbackDetailReq:
+    properties:
+      id:
+        description: 反馈ID
+        type: integer
+    required:
+    - id
+    type: object
+  dto.FeedbackListReq:
+    properties:
+      category:
+        description: 反馈分类
+        type: integer
+      end_at:
+        description: 创建时间止，Unix秒
+        type: integer
+      keyword:
+        description: 搜索标题/内容/联系方式
+        type: string
+      page:
+        description: 页码，从1开始
+        type: integer
+      page_size:
+        description: 每页数量
+        type: integer
+      priority:
+        description: 优先级：1低 2普通 3高 4紧急
+        type: integer
+      start_at:
+        description: 创建时间起，Unix秒
+        type: integer
+      status:
+        description: 处理状态：1待处理 2处理中 3已处理 4已关闭
+        type: integer
+      uid:
+        description: 业务用户UID
+        type: integer
+    type: object
+  dto.FeedbackVO:
+    properties:
+      app_version:
+        type: string
+      build_number:
+        type: string
+      category:
+        type: integer
+      category_label:
+        type: string
+      category_label_key:
+        type: string
+      contact:
+        type: string
+      content:
+        type: string
+      created_at:
+        type: integer
+      device_model:
+        type: string
+      extra:
+        type: string
+      handled_at:
+        type: integer
+      handled_by:
+        type: integer
+      id:
+        type: integer
+      locale:
+        type: string
+      os_version:
+        type: string
+      platform:
+        type: string
+      priority:
+        type: integer
+      priority_label:
+        type: string
+      priority_label_key:
+        type: string
+      reply_content:
+        type: string
+      status:
+        type: integer
+      status_label:
+        type: string
+      status_label_key:
+        type: string
+      tenant_id:
+        type: integer
+      title:
+        type: string
+      uid:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  dto.FirebaseLoginReq:
+    properties:
+      device_id:
+        description: 可选：用于多端 refresh token 管理
+        type: string
+      device_name:
+        description: 可选
+        type: string
+      id_token:
+        type: string
+    required:
+    - id_token
+    type: object
+  dto.FirebaseLoginResp:
+    properties:
+      entitlement:
+        $ref: '#/definitions/entitlement.Entitlement'
+      server_now:
+        type: integer
+      token:
+        $ref: '#/definitions/internal_client_modules_user_dto.TokenPair'
+      user:
+        $ref: '#/definitions/user.UserVO'
+    type: object
+  dto.GetSettingsReq:
+    type: object
+  dto.GetVIPStatusReq:
+    type: object
+  dto.GrantVIPReq:
+    properties:
+      auto_renew:
+        description: 0/1，可选
+        type: integer
+      duration_seconds:
+        description: 授权时长（秒）
+        type: integer
+      expired_at:
+        description: 也可直接指定到期时间（Unix 秒），优先级更高
+        type: integer
+      ref_id:
+        description: 可选：外部订单/活动ID
+        type: string
+      source:
+        description: 0/1/2/3，可选；默认 manual
+        type: integer
+    type: object
+  dto.HeartbeatReq:
+    properties:
+      app_version:
+        maxLength: 32
+        type: string
+      device_id:
+        maxLength: 128
+        type: string
+      device_name:
+        maxLength: 128
+        type: string
+      platform:
+        enum:
+        - 1
+        - 2
+        - 3
+        - 9
+        type: integer
+      push_token:
+        maxLength: 256
+        type: string
+    required:
+    - device_id
+    type: object
+  dto.ListClientEventsReq:
+    properties:
+      end_at:
+        type: integer
+      event_group:
+        type: string
+      event_name:
+        type: string
+      limit:
+        type: integer
+      offset:
+        type: integer
+      platform:
+        type: string
+      start_at:
+        type: integer
+      uid:
+        type: integer
+    type: object
+  dto.ListClientEventsResp:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.ClientEventResp'
+        type: array
+    type: object
+  dto.ListDevicesReq:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+    type: object
+  dto.ListDevicesResp:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.DeviceItem'
+        type: array
+      total:
+        type: integer
+    type: object
+  dto.LogoutReq:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  dto.RefreshTokenReq:
+    properties:
+      device_id:
+        type: string
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  dto.RefreshTokenResp:
+    properties:
+      entitlement:
+        $ref: '#/definitions/entitlement.Entitlement'
+      server_now:
+        type: integer
+      token:
+        $ref: '#/definitions/internal_client_modules_user_dto.TokenPair'
+      user:
+        $ref: '#/definitions/user.UserVO'
+    type: object
+  dto.RegisterDeviceReq:
+    properties:
+      app_version:
+        maxLength: 32
+        type: string
+      device_id:
+        maxLength: 128
+        type: string
+      device_name:
+        maxLength: 128
+        type: string
+      platform:
+        enum:
+        - 1
+        - 2
+        - 3
+        - 9
+        type: integer
+      push_token:
+        maxLength: 256
+        type: string
+    required:
+    - device_id
+    - platform
+    type: object
+  dto.ReplyFeedbackReq:
+    properties:
+      id:
+        description: 反馈ID
+        type: integer
+      reply_content:
+        description: 后台回复内容
+        maxLength: 5000
+        type: string
+      status:
+        description: 回复后状态，不传可由 service 默认置为已处理
+        type: integer
+    required:
+    - id
+    - reply_content
+    type: object
+  dto.ReportClientEventReq:
+    properties:
+      app_version:
+        type: string
+      build_number:
+        type: string
+      device_id:
+        type: string
+      device_model:
+        type: string
+      event_code:
+        type: string
+      event_group:
+        type: string
+      event_id:
+        type: string
+      event_message:
+        type: string
+      event_name:
+        type: string
+      event_source:
+        type: string
+      network_type:
+        type: string
+      os_version:
+        type: string
+      package_name:
+        type: string
+      payload:
+        type: string
+      platform:
+        type: string
+      store_available:
+        type: boolean
+    required:
+    - event_group
+    - event_id
+    - event_name
+    - platform
+    type: object
+  dto.ReportClientEventsBatchReq:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.ClientEventItemReq'
+        type: array
+    required:
+    - items
+    type: object
+  dto.RestorePurchaseReq:
+    properties:
+      order_id:
+        type: string
+      platform:
+        type: string
+      product_id:
+        type: string
+      purchase_token:
+        type: string
+      receipt_data:
+        type: string
+      source:
+        type: string
+    required:
+    - platform
+    - product_id
+    - purchase_token
+    type: object
+  dto.RestorePurchaseResp:
+    properties:
+      entitlement:
+        $ref: '#/definitions/dto.EntitlementResp'
+      order:
+        $ref: '#/definitions/dto.BillingOrderVO'
+    type: object
+  dto.RevokeDeviceReq:
+    properties:
+      device_id:
+        maxLength: 128
+        type: string
+    required:
+    - device_id
+    type: object
+  dto.RevokeVIPReq:
+    properties:
+      reason:
+        description: 可选：撤销原因（MVP 不落库，仅日志）
+        type: string
+    type: object
+  dto.SettingsResp:
+    properties:
+      created_at:
+        type: integer
+      default_currency:
+        type: string
+      default_notify_time:
+        type: string
+      default_remind_before_days:
+        type: integer
+      default_remind_on_day:
+        type: integer
+      deleted_at:
+        type: integer
+      id:
+        type: integer
+      notification_enabled:
+        type: integer
+      tenant_id:
+        type: integer
+      timezone:
+        type: string
+      updated_at:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  dto.TouchSyncReq:
+    properties:
+      device_id:
+        maxLength: 128
+        type: string
+      last_sync_at:
+        description: Unix 秒
+        type: integer
+    required:
+    - device_id
+    type: object
+  dto.UpdateFeedbackStatusReq:
+    properties:
+      id:
+        description: 反馈ID
+        type: integer
+      priority:
+        description: 优先级：1低 2普通 3高 4紧急，不传则不修改
+        type: integer
+      remark:
+        description: 处理备注，当前可作为扩展字段预留
+        maxLength: 1000
+        type: string
+      status:
+        description: 处理状态：1待处理 2处理中 3已处理 4已关闭
+        type: integer
+    required:
+    - id
+    - status
+    type: object
+  dto.UpdateSettingsReq:
+    properties:
+      default_currency:
+        description: 默认币种
+        type: string
+      default_notify_time:
+        description: 默认通知时间(HH:MM:SS)
+        type: string
+      default_remind_before_days:
+        description: 默认提前提醒天数(0~30)
+        maximum: 30
+        minimum: 0
+        type: integer
+      default_remind_on_day:
+        description: 默认到期当天提醒(0/1)
+        enum:
+        - 0
+        - 1
+        type: integer
+      notification_enabled:
+        description: 通知总开关(0/1)
+        enum:
+        - 0
+        - 1
+        type: integer
+      timezone:
+        description: 时区(IANA)
+        maxLength: 64
+        type: string
+    type: object
+  dto.VIPStatusResp:
+    properties:
+      auto_renew:
+        type: integer
+      entitlement:
+        description: 固定 vip
+        type: string
+      expired_at:
+        type: integer
+      is_vip:
+        type: boolean
+      ref_id:
+        type: string
+      source:
+        type: integer
+      started_at:
+        type: integer
+      status:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  dto.VerifyPurchaseReq:
+    properties:
+      order_id:
+        type: string
+      platform:
+        type: string
+      product_id:
+        type: string
+      purchase_time:
+        type: integer
+      purchase_token:
+        type: string
+      receipt_data:
+        type: string
+      source:
+        type: string
+    required:
+    - platform
+    - product_id
+    - purchase_token
+    type: object
+  dto.VerifyPurchaseResp:
+    properties:
+      entitlement:
+        $ref: '#/definitions/dto.EntitlementResp'
+      order:
+        $ref: '#/definitions/dto.BillingOrderVO'
+    type: object
+  entitlement.Entitlement:
+    properties:
+      free_limit:
+        type: integer
+      is_vip:
+        type: integer
+      sync_enabled:
+        type: boolean
+      unlimited_subscriptions:
+        type: boolean
+      vip_expired_at:
+        type: integer
+      vip_started_at:
+        type: integer
+    type: object
+  internal_client_modules_user_dto.TokenPair:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        description: seconds
+        type: integer
+      refresh_expires_in:
+        description: seconds
+        type: integer
+      refresh_token:
+        type: string
+    type: object
+  response.DocError:
+    properties:
+      code:
+        type: integer
+      msg:
+        type: string
+      msg_key:
+        type: string
+      msg_params:
+        additionalProperties: {}
+        type: object
+      rid:
+        type: string
+      server_now:
+        type: integer
+    type: object
+  response.DocResponse:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+      msg_key:
+        type: string
+      msg_params:
+        additionalProperties: {}
+        type: object
+      rid:
+        type: string
+      server_now:
+        type: integer
+    type: object
+  user.UserVO:
+    properties:
+      avatar:
+        type: string
+      created_at:
+        type: integer
+      email:
+        type: string
+      id:
+        description: 内部自增ID（可不对外暴露，保留调试/后台使用）
+        type: integer
+      is_vip:
+        type: integer
+      last_login_at:
+        type: integer
+      locale:
+        type: string
+      name:
+        type: string
+      status:
+        description: 1=active...
+        type: integer
+      tenant_id:
+        description: 租户ID（MVP=0）
+        type: integer
+      timezone:
+        type: string
+      uid:
+        description: 对外用户ID（业务ID）
+        type: integer
+      updated_at:
+        type: integer
+      vip_expired_at:
+        type: integer
+      vip_started_at:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /admin-api/feedback/delete:
+    post:
+      consumes:
+      - application/json
+      description: 后台软删除用户反馈，仅标记 deleted_at，不物理删除数据。
+      parameters:
+      - description: 删除反馈请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeleteFeedbackReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回 ok=true
+          schema:
+            $ref: '#/definitions/response.DocResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 删除用户反馈
+      tags:
+      - AdminFeedback
+  /admin-api/feedback/detail:
+    post:
+      consumes:
+      - application/json
+      description: 后台根据反馈 ID 获取用户反馈详情，包含反馈内容、分类、状态、优先级、客户端环境、回复和处理信息。
+      parameters:
+      - description: 反馈详情请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FeedbackDetailReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回反馈详情
+          schema:
+            $ref: '#/definitions/response.DocResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "404":
+          description: 反馈不存在
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 获取反馈详情
+      tags:
+      - AdminFeedback
+  /admin-api/feedback/list:
+    post:
+      consumes:
+      - application/json
+      description: 后台分页查询用户反馈，支持按 uid、分类、状态、优先级、关键词和创建时间范围筛选，默认按优先级和创建时间倒序返回。
+      parameters:
+      - description: 反馈列表查询请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FeedbackListReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回反馈分页列表
+          schema:
+            $ref: '#/definitions/response.DocResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 查询反馈列表
+      tags:
+      - AdminFeedback
+  /admin-api/feedback/options:
+    post:
+      consumes:
+      - application/json
+      description: 获取反馈分类、处理状态和优先级枚举选项，用于后台筛选、表单下拉和前端展示。客户端也可复用该接口获取反馈分类。
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回 categories/statuses/priorities
+          schema:
+            $ref: '#/definitions/response.DocResponse'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 获取反馈枚举选项
+      tags:
+      - AdminFeedback
+  /admin-api/feedback/reply:
+    post:
+      consumes:
+      - application/json
+      description: 后台回复用户反馈。若请求未传 status，服务端默认将反馈状态置为已处理。
+      parameters:
+      - description: 回复反馈请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ReplyFeedbackReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回 ok=true
+          schema:
+            $ref: '#/definitions/response.DocResponse'
+        "400":
+          description: 参数错误或状态非法
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 回复用户反馈
+      tags:
+      - AdminFeedback
+  /admin-api/feedback/update-status:
+    post:
+      consumes:
+      - application/json
+      description: 后台更新用户反馈处理状态，可选更新优先级。状态：1待处理 2处理中 3已处理 4已关闭；优先级：1低 2普通 3高 4紧急。
+      parameters:
+      - description: 更新反馈状态请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateFeedbackStatusReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回 ok=true
+          schema:
+            $ref: '#/definitions/response.DocResponse'
+        "400":
+          description: 参数错误、状态非法或优先级非法
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 更新反馈状态
+      tags:
+      - AdminFeedback
+  /v1/auth/account/login:
+    post:
+      consumes:
+      - application/json
+      description: 使用邮箱和密码登录，返回 token、用户信息与权益信息。
+      parameters:
+      - description: 账号登录参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AccountLoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.AccountLoginResp'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 账号密码登录
+      tags:
+      - 认证
+  /v1/auth/account/register:
+    post:
+      consumes:
+      - application/json
+      description: 使用邮箱和密码注册账号，注册成功后返回 token、用户信息与权益信息。
+      parameters:
+      - description: 账号注册参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AccountRegisterReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.AccountRegisterResp'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 账号密码注册
+      tags:
+      - 认证
+  /v1/auth/firebase/login:
+    post:
+      consumes:
+      - application/json
+      description: 使用 Firebase id_token 完成登录/注册，返回 token 与用户信息。
+      parameters:
+      - description: Firebase 登录参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.FirebaseLoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.FirebaseLoginResp'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: Firebase 第三方登录
+      tags:
+      - 认证
+  /v1/auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: 吊销 refresh_token，使其不可再用于刷新 access_token。
+      parameters:
+      - description: 退出登录参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LogoutReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  additionalProperties: true
+                  type: object
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 退出登录
+      tags:
+      - 认证
+  /v1/auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: 使用 refresh_token 换取新的 access_token，并返回 refresh_token 与剩余有效期。
+      parameters:
+      - description: 刷新令牌参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RefreshTokenReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.RefreshTokenResp'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 刷新访问令牌
+      tags:
+      - 认证
+  /v1/billing/api/config:
+    post:
+      consumes:
+      - application/json
+      description: 查询 Billing 页面展示配置与当前平台可用商品列表。
+      parameters:
+      - description: Billing 配置查询参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.BillingConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为 Billing 配置）
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.BillingConfigResp'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 查询 Billing 配置
+      tags:
+      - Billing
+  /v1/billing/api/entitlement:
+    post:
+      consumes:
+      - application/json
+      description: 查询当前登录用户的 Billing 权益状态。
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为当前权益信息）
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.EntitlementResp'
+              type: object
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 查询当前权益
+      tags:
+      - Billing
+  /v1/billing/api/restore:
+    post:
+      consumes:
+      - application/json
+      description: 恢复当前登录用户已有的购买记录，并刷新对应权益状态。
+      parameters:
+      - description: 恢复购买参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RestorePurchaseReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为恢复结果与最新权益）
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.RestorePurchaseResp'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 恢复购买
+      tags:
+      - Billing
+  /v1/billing/api/verify:
+    post:
+      consumes:
+      - application/json
+      description: 校验当前登录用户提交的 Google Play / App Store 购买凭证，并刷新对应权益状态。
+      parameters:
+      - description: 购买校验参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.VerifyPurchaseReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为校验结果与最新权益）
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.VerifyPurchaseResp'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 购买校验
+      tags:
+      - Billing
+  /v1/client-events/api/list:
+    post:
+      consumes:
+      - application/json
+      description: 按条件查询客户端埋点事件列表，用于后台排查客户端 billing/sync/login/app 等问题。
+      parameters:
+      - description: 客户端埋点查询参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ListClientEventsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为埋点列表）
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.ListClientEventsResp'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 查询客户端埋点事件列表
+      tags:
+      - 客户端埋点
+  /v1/client-events/api/report:
+    post:
+      consumes:
+      - application/json
+      description: 上报一条客户端埋点事件，用于 billing/sync/login/app 等链路排查。
+      parameters:
+      - description: 客户端埋点上报参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ReportClientEventReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.DocResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 上报客户端埋点事件
+      tags:
+      - 客户端埋点
+  /v1/client-events/api/report-batch:
+    post:
+      consumes:
+      - application/json
+      description: 批量上报多条客户端埋点事件，用于客户端离线缓存后的集中补传。
+      parameters:
+      - description: 客户端埋点批量上报参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ReportClientEventsBatchReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.DocResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 批量上报客户端埋点事件
+      tags:
+      - 客户端埋点
+  /v1/devices/api/heartbeat:
+    post:
+      consumes:
+      - application/json
+      description: 上报设备活跃信息（用于在线状态/最后活跃时间）。
+      parameters:
+      - description: 心跳参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.HeartbeatReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为空对象）
+          schema:
+            $ref: '#/definitions/response.DocResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 设备心跳
+      tags:
+      - 设备
+  /v1/devices/api/list:
+    post:
+      consumes:
+      - application/json
+      description: 获取当前登录用户的设备列表（仅返回 active 设备）。
+      parameters:
+      - description: 列表筛选参数（可选）
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/dto.ListDevicesReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为设备列表）
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.ListDevicesResp'
+              type: object
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 设备列表
+      tags:
+      - 设备
+  /v1/devices/api/register:
+    post:
+      consumes:
+      - application/json
+      description: 绑定/更新当前登录用户的设备信息。服务端会记录 last_ip / user_agent，不建议客户端传。
+      parameters:
+      - description: 设备登记参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterDeviceReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为登记结果）
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.DeviceItem'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 设备登记
+      tags:
+      - 设备
+  /v1/devices/api/revoke:
+    post:
+      consumes:
+      - application/json
+      description: 撤销指定设备，使其失效（可用于踢出其它设备）。
+      parameters:
+      - description: 撤销设备参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RevokeDeviceReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为空对象）
+          schema:
+            $ref: '#/definitions/response.DocResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 撤销设备
+      tags:
+      - 设备
+  /v1/devices/api/touch_sync:
+    post:
+      consumes:
+      - application/json
+      description: 上报客户端触发同步的时间点（用于增量同步/同步状态统计）。
+      parameters:
+      - description: 同步触发参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TouchSyncReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为空对象）
+          schema:
+            $ref: '#/definitions/response.DocResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 同步时间点上报
+      tags:
+      - 设备
+  /v1/feedback/api/create:
+    post:
+      consumes:
+      - application/json
+      description: 客户端提交问题反馈、功能建议、支付订阅问题、账号登录问题等。未登录用户 uid 可为 0，服务端会记录客户端版本、平台、设备、系统版本和语言等环境信息。
+      parameters:
+      - description: 创建用户反馈请求
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateFeedbackReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回反馈详情
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.FeedbackVO'
+              type: object
+        "400":
+          description: 参数错误或反馈内容为空
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 创建用户反馈
+      tags:
+      - Feedback
+  /v1/feedback/api/options:
+    post:
+      consumes:
+      - application/json
+      description: 获取反馈分类、处理状态和优先级枚举选项，用于后台筛选、表单下拉和前端展示。客户端也可复用该接口获取反馈分类。
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功返回 categories/statuses/priorities
+          schema:
+            $ref: '#/definitions/response.DocResponse'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 获取反馈枚举选项
+      tags:
+      - AdminFeedback
+  /v1/settings/api/get:
+    post:
+      consumes:
+      - application/json
+      description: 获取当前登录用户的全局设置；若不存在则创建默认值并返回。
+      parameters:
+      - description: 查询参数（可选，允许空 body）
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/dto.GetSettingsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为用户设置）
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.SettingsResp'
+              type: object
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 获取用户设置
+      tags:
+      - 设置
+  /v1/settings/api/update:
+    post:
+      consumes:
+      - application/json
+      description: 局部更新当前登录用户的设置项（仅更新请求中提供的字段）。
+      parameters:
+      - description: 更新参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateSettingsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为更新后的用户设置）
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.SettingsResp'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 更新用户设置
+      tags:
+      - 设置
+  /v1/vip/api/grant:
+    post:
+      consumes:
+      - application/json
+      description: 手动为当前登录用户开通或延长 VIP（建议仅后台/内网/调试使用）。
+      parameters:
+      - description: 开通/延长参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GrantVIPReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为变更结果）
+          schema:
+            $ref: '#/definitions/response.DocResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 手动开通/延长 VIP
+      tags:
+      - 权益
+  /v1/vip/api/revoke:
+    post:
+      consumes:
+      - application/json
+      description: 撤销当前登录用户的 VIP 权益（建议仅后台/内网/调试使用）。
+      parameters:
+      - description: 撤销参数（可选）
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/dto.RevokeVIPReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为变更结果）
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.VIPStatusResp'
+              type: object
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 撤销 VIP
+      tags:
+      - 权益
+  /v1/vip/api/status:
+    post:
+      consumes:
+      - application/json
+      description: 查询当前登录用户的 VIP 状态与到期时间等信息。
+      parameters:
+      - description: 查询参数（可选）
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/dto.GetVIPStatusReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功（data 为 VIP 状态）
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.DocResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.VIPStatusResp'
+              type: object
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.DocError'
+        "500":
+          description: 服务端错误
+          schema:
+            $ref: '#/definitions/response.DocError'
+      summary: 查询 VIP 状态
+      tags:
+      - 权益
+swagger: "2.0"

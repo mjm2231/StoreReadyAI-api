@@ -1,0 +1,11 @@
+{
+  "common_ok": "成功しました",
+  "common_retry_later": "しばらくしてからもう一度お試しください",
+  "common_invalid_param": "パラメータが不正です",
+  "subscription_name_required": "サービス名を入力してください",
+  "billing_free_limit_reached": "無料プランの上限に達しました（最大 {limit} 件）",
+  "reminder_due_today_title": "本日請求：{serviceName}",
+  "reminder_due_today_body": "金額は {amount}{currency} です。継続が必要かご確認ください",
+  "vip_monthly":"storeready_ai VIP 月額サブスクリプション",
+  "vip_yearly":"storeready_ai VIP 年額サブスクリプション"
+}

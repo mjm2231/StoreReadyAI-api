@@ -1,0 +1,5 @@
+-- ALTER TABLE `user_settings`
+--   ADD COLUMN `default_notify_time` TIME NOT NULL DEFAULT '09:00:00' COMMENT '默认通知时间(HH:MM:SS)' AFTER `notification_enabled`,
+--   ADD COLUMN `deleted_at` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '软删除时间戳秒(0=未删除)' AFTER `updated_at`,
+--   DROP INDEX `idx_settings_updated`,
+--   ADD KEY `idx_settings_sync` (`tenant_id`,`updated_at`);

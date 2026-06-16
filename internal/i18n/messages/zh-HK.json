@@ -1,0 +1,11 @@
+{
+  "common_ok": "成功",
+  "common_retry_later": "请稍后重试",
+  "common_invalid_param": "参数错误",
+  "subscription_name_required": "请输入服务名",
+  "billing_free_limit_reached": "已达到免费上限（最多 {limit} 条）",
+  "reminder_due_today_title": "今天将扣费：{serviceName}",
+  "reminder_due_today_body": "金额 {amount}{currency}，记得确认是否需要续订",
+  "vip_monthly":"storeready_ai VIP 月度訂閱",
+  "vip_yearly":"storeready_ai VIP 年度訂閱"
+}

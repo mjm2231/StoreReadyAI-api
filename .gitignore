@@ -1,0 +1,116 @@
+########################################
+# 配置：严格企业版（只提交模板，不提交真实配置）
+########################################
+
+# configs 目录：默认全部忽略
+configs/*
+
+# 允许提交模板/说明
+!configs/README.md
+!configs/dev.example.yaml
+!configs/prod.example.yaml
+!configs/.gitkeep
+
+# 强制忽略真实配置（你现在这两个文件）
+configs/dev.yaml
+configs/prod.yaml
+
+########################################
+# 环境变量/密钥
+########################################
+.env
+.env.*
+!.env.example
+!.env.template
+
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
+
+########################################
+# 日志/运行时/数据目录
+########################################
+logs/
+log/
+tmp/
+run/
+data/
+storage/
+uploads/
+cache/
+
+*.log
+*.log.*
+*.pid
+*.sock
+
+# sqlite/本地文件库
+*.db
+*.sqlite
+*.sqlite3
+*.wal
+*.shm
+
+########################################
+# Go 构建产物/覆盖率
+########################################
+/bin/
+/dist/
+/build/
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+cover.out
+coverage.out
+coverage/
+*.coverprofile
+
+vendor/
+
+########################################
+# 本地 dev 工具链
+########################################
+.dev/
+!.dev/README.md
+!.dev/.env.example
+!.dev/.gitkeep
+
+########################################
+# IDE / 系统垃圾
+########################################
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+.idea/
+*.iml
+
+.DS_Store
+._*
+Thumbs.db
+
+########################################
+# 前端（若有）
+########################################
+node_modules/
+dist/
+.next/
+.vite/
+.eslintcache
+
+########################################
+# Docker 覆盖
+########################################
+docker-compose.override.yml
+docker-compose.*.override.yml
+
+# local runtime data
+.data/
+._out/

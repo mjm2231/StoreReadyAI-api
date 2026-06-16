@@ -1,0 +1,11 @@
+{
+  "common_ok": "OK",
+  "common_retry_later": "Please try again later",
+  "common_invalid_param": "Invalid parameter",
+  "subscription_name_required": "Please enter a service name",
+  "billing_free_limit_reached": "You've reached the free limit (up to {limit} subscriptions)",
+  "reminder_due_today_title": "Billing today: {serviceName}",
+  "reminder_due_today_body": "Amount {amount}{currency}, please confirm whether to continue",
+  "vip_monthly":"storeready_ai VIP Monthly",
+  "vip_yearly":"storeready_ai VIP Yearly"
+}
