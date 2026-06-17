@@ -57,7 +57,9 @@ func (c *TimeoutConfig) withDefaults() TimeoutConfig {
 		cfg.RespMessage = "Request Timeout"
 	}
 	if cfg.RouteTimeoutResolver == nil {
-		cfg.RouteTimeoutResolver = func(_ *gin.Context) time.Duration { return 0 }
+		cfg.RouteTimeoutResolver = CommonTimeoutResolver(map[string]time.Duration{
+			"POST /v1/projects/store-info/generate": 60 * time.Second,
+		})
 	}
 	// 默认返回 504。
 	if !cfg.UseGatewayTimeout {

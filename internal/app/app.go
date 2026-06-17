@@ -52,6 +52,7 @@ import (
 	"storeready_ai/internal/infra/cache"
 	"storeready_ai/internal/infra/db"
 	"storeready_ai/internal/infra/securityevent"
+	"storeready_ai/internal/pkg/ai"
 	"storeready_ai/internal/pkg/security"
 
 	httphandler "storeready_ai/internal/client/http/handler"
@@ -455,7 +456,30 @@ func NewWithPath(cfgPath string) (*App, error) {
 	feedbackHandler := feedbackhandler.NewHandler(feedbackSvc)
 
 	projectRepo := projectrepo.New(gdb)
-	projectService := projectsvc.New(projectRepo)
+
+	var storeInfoAIGen ai.StoreInfoGenerator
+	if cfg.AI.Enabled {
+		storeInfoAIGen, err = ai.NewStoreInfoGenerator(ai.Config{
+			Provider:       cfg.AI.Provider,
+			Model:          cfg.AI.Model,
+			APIKey:         cfg.AI.APIKey,
+			Endpoint:       cfg.AI.Endpoint,
+			TimeoutSeconds: cfg.AI.TimeoutSeconds,
+		})
+		if err != nil {
+			_ = stopRedis()
+			_ = stopDB()
+			return nil, err
+		}
+		logger.Info("project store info ai generator enabled",
+			zap.String("provider", cfg.AI.Provider),
+			zap.String("model", cfg.AI.Model),
+		)
+	} else {
+		logger.Info("project store info ai generator disabled: ai.enabled=false")
+	}
+
+	projectService := projectsvc.New(projectRepo, storeInfoAIGen)
 	projectHandler := projecthandler.NewProjectHandler(projectService)
 
 	userHandler := userhandler.NewUserHandler(userService)

@@ -1,8 +1,10 @@
 package config
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -23,6 +25,7 @@ type Config struct {
 	Redis         RedisConfig         `mapstructure:"redis"`
 	Firebase      FirebaseConfig      `mapstructure:"firebase"`
 	Billing       BillingConfig       `mapstructure:"billing"`
+	AI            AIConfig            `mapstructure:"ai"`
 	Security      SecurityConfig      `mapstructure:"security"`
 	AntiAbuse     AntiAbuseConfig     `mapstructure:"anti_abuse"`
 	Observability ObservabilityConfig `mapstructure:"observability"`
@@ -216,6 +219,22 @@ type BillingAppStoreConfig struct {
 }
 
 // -------------------------
+// ai
+// -------------------------
+
+// AIConfig AI 服务配置。
+//
+// MVP 默认使用 Google Gemini，后续可通过 provider/model 切换不同 AI 服务。
+type AIConfig struct {
+	Enabled        bool   `mapstructure:"enabled"`
+	Provider       string `mapstructure:"provider"`
+	Model          string `mapstructure:"model"`
+	APIKey         string `mapstructure:"api_key"`
+	Endpoint       string `mapstructure:"endpoint"`
+	TimeoutSeconds int    `mapstructure:"timeout_seconds"`
+}
+
+// -------------------------
 // security / anti_abuse / observability
 // -------------------------
 
@@ -357,8 +376,12 @@ func Load(cfgPath string) (*Config, error) {
 	}
 
 	v.SetConfigFile(path)
+	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	v.AutomaticEnv()
 
 	setDefaults(v)
+	bindEnvs(v)
+	loadDotEnvFiles(path)
 
 	if err := v.ReadInConfig(); err != nil {
 		return nil, err
@@ -368,11 +391,88 @@ func Load(cfgPath string) (*Config, error) {
 	if err := v.Unmarshal(&c); err != nil {
 		return nil, err
 	}
+	applyPostEnvOverrides(&c)
 
 	if err := validate(&c); err != nil {
 		return nil, err
 	}
 	return &c, nil
+}
+
+func bindEnvs(v *viper.Viper) {
+	// AI：支持标准配置路径 AI_API_KEY，也兼容常用 Gemini 专用变量 GEMINI_API_KEY。
+	_ = v.BindEnv("ai.enabled", "AI_ENABLED")
+	_ = v.BindEnv("ai.provider", "AI_PROVIDER")
+	_ = v.BindEnv("ai.model", "AI_MODEL")
+	_ = v.BindEnv("ai.api_key", "AI_API_KEY", "GEMINI_API_KEY", "GOOGLE_GEMINI_API_KEY")
+	_ = v.BindEnv("ai.endpoint", "AI_ENDPOINT")
+	_ = v.BindEnv("ai.timeout_seconds", "AI_TIMEOUT_SECONDS")
+}
+
+func loadDotEnvFiles(configPath string) {
+	// 只做开发便利：存在就加载，不存在不报错；系统环境变量优先级高于 .env。
+	candidates := []string{".env"}
+	if dir := filepath.Dir(configPath); dir != "." && dir != "" {
+		candidates = append(candidates, filepath.Join(dir, ".env"))
+	}
+
+	for _, path := range candidates {
+		loadDotEnvFile(path)
+	}
+}
+
+func loadDotEnvFile(path string) {
+	file, err := os.Open(path)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		line = strings.TrimPrefix(line, "export ")
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+		key := strings.TrimSpace(parts[0])
+		value := strings.TrimSpace(parts[1])
+		value = strings.Trim(value, "\"'")
+		if key == "" {
+			continue
+		}
+		if _, exists := os.LookupEnv(key); exists {
+			continue
+		}
+		_ = os.Setenv(key, value)
+	}
+}
+
+func applyPostEnvOverrides(c *Config) {
+	if c == nil {
+		return
+	}
+
+	// 支持 YAML 中写 api_key: "${GEMINI_API_KEY}" 的场景。
+	c.AI.APIKey = strings.TrimSpace(os.ExpandEnv(c.AI.APIKey))
+	if c.AI.APIKey == "" {
+		if v := strings.TrimSpace(os.Getenv("AI_API_KEY")); v != "" {
+			c.AI.APIKey = v
+			return
+		}
+		if v := strings.TrimSpace(os.Getenv("GEMINI_API_KEY")); v != "" {
+			c.AI.APIKey = v
+			return
+		}
+		if v := strings.TrimSpace(os.Getenv("GOOGLE_GEMINI_API_KEY")); v != "" {
+			c.AI.APIKey = v
+			return
+		}
+	}
 }
 
 func setDefaults(v *viper.Viper) {
@@ -496,6 +596,14 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("billing.app_store.private_key_path", "")
 	v.SetDefault("billing.app_store.bundle_id", "")
 	v.SetDefault("billing.app_store.environment", "sandbox")
+
+	// ai
+	v.SetDefault("ai.enabled", false)
+	v.SetDefault("ai.provider", "google_gemini")
+	v.SetDefault("ai.model", "gemini-2.5-flash")
+	v.SetDefault("ai.api_key", "")
+	v.SetDefault("ai.endpoint", "https://generativelanguage.googleapis.com/v1beta/models")
+	v.SetDefault("ai.timeout_seconds", 30)
 
 	// anti_abuse
 	v.SetDefault("anti_abuse.primary", "rate_limit")
@@ -698,6 +806,29 @@ func validate(c *Config) error {
 			if env != "sandbox" && env != "production" {
 				return errors.New("config: billing.app_store.environment must be sandbox|production")
 			}
+		}
+	}
+
+	// ai
+	if c.AI.Enabled {
+		provider := strings.TrimSpace(c.AI.Provider)
+		if provider == "" {
+			return errors.New("config: ai.provider required when ai.enabled")
+		}
+		if provider != "google_gemini" {
+			return errors.New("config: ai.provider must be google_gemini")
+		}
+		if strings.TrimSpace(c.AI.Model) == "" {
+			return errors.New("config: ai.model required when ai.enabled")
+		}
+		if strings.TrimSpace(c.AI.APIKey) == "" {
+			return errors.New("config: ai.api_key required when ai.enabled")
+		}
+		if strings.TrimSpace(c.AI.Endpoint) == "" {
+			return errors.New("config: ai.endpoint required when ai.enabled")
+		}
+		if c.AI.TimeoutSeconds <= 0 {
+			return errors.New("config: ai.timeout_seconds must be > 0 when ai.enabled")
 		}
 	}
 
