@@ -249,6 +249,9 @@ func NewWithPath(cfgPath string) (*App, error) {
 		os.Exit(1)
 	}
 	log_path := os.Getenv("LOG_PATH")
+	if log_path == "" {
+		log_path = "./data/logs"
+	}
 	// 初始化企业级日志（zap）
 	logger, err := infrolog.Init(infrolog.Config{
 		Service:          cfg.Server.Name,
@@ -274,10 +277,13 @@ func NewWithPath(cfgPath string) (*App, error) {
 
 	// 初始化 ID 生成器（如果有需要的话）
 	common.MustInitIDs(-1, time.Time{})
-
+	i18n_path := os.Getenv("I18N_PATH")
+	if i18n_path == "" {
+		i18n_path = "internal/i18n/messages"
+	}
 	// 初始化 i18n（服务端错误提示 / 通知文案）
 	i18nBundle, err := i18n.NewBundle(
-		"internal/i18n/messages",
+		i18n_path,
 		[]string{i18n.LocaleENUS, i18n.LocaleZHCN, i18n.LocaleZHHK, i18n.LocaleJAJP},
 	)
 	if err != nil {
