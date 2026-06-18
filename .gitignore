@@ -34,13 +34,11 @@ configs/prod.yaml
 # 日志/运行时/数据目录
 ########################################
 logs/
-log/
 tmp/
 run/
 data/
 storage/
 uploads/
-cache/
 
 *.log
 *.log.*
