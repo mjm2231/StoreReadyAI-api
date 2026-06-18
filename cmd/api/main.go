@@ -1,11 +1,9 @@
 package main
 
 import (
-	"bufio"
 	"context"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"time"
 
@@ -15,11 +13,9 @@ import (
 )
 
 func main() {
-	loadDotEnvIfExists(".env")
 
-	configPath := os.Getenv("CONFIG_PATH")
-	a, err := app.NewWithPath(configPath)
-	infrolog.L().Info("应用初始化读取配置文件", infrolog.Any("configPath", configPath))
+	a, err := app.NewWithPath("")
+
 	if err != nil {
 		infrolog.L().Fatal("应用初始化失败", infrolog.Any("err", err))
 	}
@@ -47,35 +43,4 @@ func main() {
 	}
 
 	infrolog.L().Info("退出完成")
-}
-
-func loadDotEnvIfExists(path string) {
-	file, err := os.Open(path)
-	if err != nil {
-		return
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line == "" || strings.HasPrefix(line, "#") {
-			continue
-		}
-
-		key, value, ok := strings.Cut(line, "=")
-		if !ok {
-			continue
-		}
-
-		key = strings.TrimSpace(key)
-		value = strings.TrimSpace(value)
-		value = strings.Trim(value, `"'`)
-
-		if key == "" || os.Getenv(key) != "" {
-			continue
-		}
-
-		_ = os.Setenv(key, value)
-	}
 }

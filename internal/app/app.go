@@ -1,6 +1,7 @@
 package app
 
 import (
+	"bufio"
 	"context"
 	"errors"
 	"fmt"
@@ -234,13 +235,20 @@ func New() (*App, error) {
 
 // NewWithPath 使用指定配置路径创建应用（便于测试/多环境）。
 func NewWithPath(cfgPath string) (*App, error) {
+	loadDotEnvIfExists(".env")
+	if cfgPath == "" {
+		configPath := os.Getenv("CONFIG_PATH")
+		if configPath != "" {
+			cfgPath = configPath
+		}
+	}
 	cfg, err := config.Load(cfgPath)
 	if err != nil {
 		// 此时日志系统尚未初始化，直接输出到 stderr
 		_, _ = os.Stderr.WriteString("加载配置失败：" + err.Error() + "\n")
 		os.Exit(1)
 	}
-
+	log_path := os.Getenv("LOG_PATH")
 	// 初始化企业级日志（zap）
 	logger, err := infrolog.Init(infrolog.Config{
 		Service:          cfg.Server.Name,
@@ -250,8 +258,8 @@ func NewWithPath(cfgPath string) (*App, error) {
 		Caller:           true,
 		Stacktrace:       true,
 		Sampling:         false,
-		OutputPaths:      []string{"stdout", "./.data/logs/app.log"},
-		ErrorOutputPaths: []string{"stderr", "./.data/logs/app.err.log"},
+		OutputPaths:      []string{"stdout", log_path + "/app.log"},
+		ErrorOutputPaths: []string{"stderr", log_path + "/app.err.log"},
 		RedactKeys:       []string{"password", "token", "authorization", "jwt", "secret", "sign_key"},
 	})
 	if err != nil {
@@ -868,4 +876,35 @@ func (c *limitConn) Close() error {
 		}
 	}
 	return c.Conn.Close()
+}
+
+func loadDotEnvIfExists(path string) {
+	file, err := os.Open(path)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		key, value, ok := strings.Cut(line, "=")
+		if !ok {
+			continue
+		}
+
+		key = strings.TrimSpace(key)
+		value = strings.TrimSpace(value)
+		value = strings.Trim(value, `"'`)
+
+		if key == "" || os.Getenv(key) != "" {
+			continue
+		}
+
+		_ = os.Setenv(key, value)
+	}
 }
