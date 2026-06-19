@@ -303,7 +303,6 @@ func (s *serviceImpl) GenerateProjectStoreInfo(ctx context.Context, tenantID, us
 	}
 
 	return &dto.GenerateProjectStoreInfoResp{
-		AppName:          generated.AppName,
 		Subtitle:         generated.Subtitle,
 		ShortDescription: generated.ShortDescription,
 		FullDescription:  generated.FullDescription,

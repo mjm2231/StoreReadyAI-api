@@ -163,7 +163,6 @@ func buildStoreInfoPrompt(input StoreInfoInput) string {
 只允许返回 JSON，不要返回 Markdown，不要添加解释。
 JSON 字段必须严格为：
 {
-  "app_name": "",
   "subtitle": "",
   "short_description": "",
   "full_description": "",
@@ -171,15 +170,17 @@ JSON 字段必须严格为：
 }
 
 生成要求：
-1. app_name：简洁清晰，优先使用已有 App 名称或项目名称，最多 30 个中文字符。
-2. subtitle：一句话说明产品价值，最多 30 个中文字符。
-3. short_description：简短描述，适合商店摘要，最多 80 个中文字符。
-4. full_description：完整介绍，突出目标用户、核心功能和使用场景，最多 500 个中文字符。
-5. keywords：关键词用英文逗号分隔，最多 10 个关键词。
-6. 不要夸大，不要承诺无法验证的效果。
-7. 不要输出除 JSON 外的任何内容。
-8. 不要使用 Markdown，不要使用代码块标记。
-9. 必须返回完整可解析 JSON，不能截断。
+1. app_name 只作为上下文参考，不是生成字段。
+2. 不得改写、扩展、翻译、重命名 App 名称。
+3. 不要输出 app_name 字段。
+4. subtitle：一句话说明产品价值，最多 30 个中文字符。
+5. short_description：简短描述，适合商店摘要，最多 80 个中文字符。
+6. full_description：完整介绍，突出目标用户、核心功能和使用场景，最多 500 个中文字符。
+7. keywords：关键词用英文逗号分隔，最多 10 个关键词。
+8. 不要夸大，不要承诺无法验证的效果。
+9. 不要输出除 JSON 外的任何内容。
+10. 不要使用 Markdown，不要使用代码块标记。
+11. 必须返回完整可解析 JSON，不能截断。
 项目信息：
 - project_id: %d
 - project_name: %s
@@ -252,7 +253,6 @@ func normalizeGeneratedStoreInfo(info *GeneratedStoreInfo) {
 	if info == nil {
 		return
 	}
-	info.AppName = strings.TrimSpace(info.AppName)
 	info.Subtitle = strings.TrimSpace(info.Subtitle)
 	info.ShortDescription = strings.TrimSpace(info.ShortDescription)
 	info.FullDescription = strings.TrimSpace(info.FullDescription)

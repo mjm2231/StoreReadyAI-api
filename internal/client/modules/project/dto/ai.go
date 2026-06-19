@@ -10,9 +10,9 @@ type GenerateProjectStoreInfoReq struct {
 
 // GenerateProjectStoreInfoResp AI 生成上架资料响应。
 //
-// MVP 只生成 5 个文本字段，前端收到后回填表单，用户确认后再手动保存。
+// App 名称只作为 AI 上下文输入，不作为 AI 生成字段返回，避免覆盖用户手动填写的应用名称。
+// MVP 只生成副标题、简短描述、完整描述和关键词 4 个文本字段，前端收到后回填表单，用户确认后再手动保存。
 type GenerateProjectStoreInfoResp struct {
-	AppName          string `json:"app_name"`
 	Subtitle         string `json:"subtitle"`
 	ShortDescription string `json:"short_description"`
 	FullDescription  string `json:"full_description"`

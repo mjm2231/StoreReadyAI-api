@@ -36,9 +36,9 @@ type StoreInfoInput struct {
 
 // GeneratedStoreInfo AI 生成出的上架资料文本。
 //
-// MVP 只生成 5 个字段，前端收到后回填表单，由用户确认后再保存。
+// App 名称只作为 AI 上下文输入，不作为 AI 生成字段返回，避免覆盖用户手动填写的应用名称。
+// AI 只生成副标题、简短描述、完整描述和关键词 4 个字段，前端收到后回填表单，由用户确认后再保存。
 type GeneratedStoreInfo struct {
-	AppName          string `json:"app_name"`
 	Subtitle         string `json:"subtitle"`
 	ShortDescription string `json:"short_description"`
 	FullDescription  string `json:"full_description"`
