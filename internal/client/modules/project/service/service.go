@@ -65,12 +65,15 @@ func (s *serviceImpl) CreateProject(ctx context.Context, tenantID, userID uint64
 		return nil, errx.New(errx.CodeInvalidParam, "invalid project platform")
 	}
 
+	description := strings.TrimSpace(req.Description)
+
 	project := &model.Project{
-		TenantID: tenantID,
-		UserID:   userID,
-		Name:     name,
-		Platform: platform,
-		Status:   model.ProjectStatusDraft,
+		TenantID:    tenantID,
+		UserID:      userID,
+		Name:        name,
+		Description: description,
+		Platform:    platform,
+		Status:      model.ProjectStatusDraft,
 	}
 	if err := s.projects.Create(ctx, project); err != nil {
 		return nil, errx.Wrap(err, errx.CodeInternal, "create project failed")
@@ -128,12 +131,13 @@ func toProjectItem(project *model.Project) dto.ProjectItem {
 		return dto.ProjectItem{}
 	}
 	return dto.ProjectItem{
-		ID:        project.ID,
-		Name:      project.Name,
-		Platform:  project.Platform,
-		Status:    project.Status,
-		CreatedAt: project.CreatedAt,
-		UpdatedAt: project.UpdatedAt,
+		ID:          project.ID,
+		Name:        project.Name,
+		Description: project.Description,
+		Platform:    project.Platform,
+		Status:      project.Status,
+		CreatedAt:   project.CreatedAt,
+		UpdatedAt:   project.UpdatedAt,
 	}
 }
 
@@ -271,10 +275,11 @@ func (s *serviceImpl) GenerateProjectStoreInfo(ctx context.Context, tenantID, us
 	}
 
 	input := ai.StoreInfoInput{
-		ProjectID: req.ProjectID,
-		Name:      project.Name,
-		Platform:  project.Platform,
-		Status:    project.Status,
+		ProjectID:   req.ProjectID,
+		Name:        project.Name,
+		Description: project.Description,
+		Platform:    project.Platform,
+		Status:      project.Status,
 	}
 
 	info, err := s.projects.GetStoreInfoByProjectID(ctx, tenantID, userID, req.ProjectID)

@@ -19,10 +19,11 @@ type Config struct {
 
 // StoreInfoInput 生成上架资料的输入上下文。
 type StoreInfoInput struct {
-	ProjectID uint64
-	Name      string
-	Platform  string
-	Status    string
+	ProjectID   uint64
+	Name        string
+	Description string
+	Platform    string
+	Status      string
 
 	ExistingAppName          string
 	ExistingSubtitle         string

@@ -46,6 +46,7 @@ func (r *gormRepo) Create(ctx context.Context, project *model.Project) error {
 
 	now := nowSec()
 	project.Name = strings.TrimSpace(project.Name)
+	project.Description = strings.TrimSpace(project.Description)
 	project.Platform = strings.TrimSpace(project.Platform)
 	project.Status = strings.TrimSpace(project.Status)
 	if project.Status == "" {

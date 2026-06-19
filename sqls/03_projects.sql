@@ -4,6 +4,7 @@ CREATE TABLE projects (
   user_id BIGINT NOT NULL COMMENT '用户ID',
 
   name VARCHAR(100) NOT NULL COMMENT '项目名称',
+  description TEXT NULL COMMENT '项目描述，用于补充说明应用功能、目标用户、核心卖点等',
   platform VARCHAR(32) NOT NULL DEFAULT '' COMMENT '平台',
   status VARCHAR(32) NOT NULL DEFAULT 'draft' COMMENT '状态',
 

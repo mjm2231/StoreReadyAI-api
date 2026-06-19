@@ -7,18 +7,20 @@ package dto
 
 // CreateProjectReq 创建项目请求。
 type CreateProjectReq struct {
-	Name     string `json:"name" binding:"required,min=1,max=100"`
-	Platform string `json:"platform" binding:"omitempty,oneof=ios android"`
+	Name        string `json:"name" binding:"required,min=1,max=100"`
+	Description string `json:"description" binding:"omitempty,max=2000"`
+	Platform    string `json:"platform" binding:"omitempty,oneof=ios android"`
 }
 
 // ProjectItem 项目列表/详情基础展示对象。
 type ProjectItem struct {
-	ID        uint64 `json:"id"`
-	Name      string `json:"name"`
-	Platform  string `json:"platform"`
-	Status    string `json:"status"`
-	CreatedAt uint64 `json:"created_at"`
-	UpdatedAt uint64 `json:"updated_at"`
+	ID          uint64 `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Platform    string `json:"platform"`
+	Status      string `json:"status"`
+	CreatedAt   uint64 `json:"created_at"`
+	UpdatedAt   uint64 `json:"updated_at"`
 }
 
 // CreateProjectResp 创建项目响应。

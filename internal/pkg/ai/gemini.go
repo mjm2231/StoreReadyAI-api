@@ -183,6 +183,7 @@ JSON 字段必须严格为：
 项目信息：
 - project_id: %d
 - project_name: %s
+- project_description: %s
 - platform: %s
 - project_status: %s
 
@@ -197,6 +198,7 @@ JSON 字段必须严格为：
 `,
 		input.ProjectID,
 		input.Name,
+		input.Description,
 		input.Platform,
 		input.Status,
 		input.ExistingAppName,
