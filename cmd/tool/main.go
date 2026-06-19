@@ -54,7 +54,7 @@ func main() {
 	}
 
 	fmt.Println(tenantID)
-	loadDotEnvIfExists(".env")
+	loadDotEnvIfExists("/opt/storeready_ai/config/.env")
 	configPath := os.Getenv("CONFIG_PATH")
 	if configPath == "" {
 		configPath = "configs/dev.yaml"
