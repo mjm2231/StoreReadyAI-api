@@ -54,7 +54,12 @@ func main() {
 	}
 
 	fmt.Println(tenantID)
-	cfg, err := config.Load("")
+	loadDotEnvIfExists(".env")
+	configPath := os.Getenv("CONFIG_PATH")
+	if configPath == "" {
+		configPath = "configs/dev.yaml"
+	}
+	cfg, err := config.Load(configPath)
 	if err != nil {
 		fmt.Printf("failed to load config: %v", err)
 	}
@@ -414,4 +419,35 @@ func hasTenantID(lines []string) bool {
 		}
 	}
 	return false
+}
+
+func loadDotEnvIfExists(path string) {
+	file, err := os.Open(path)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		key, value, ok := strings.Cut(line, "=")
+		if !ok {
+			continue
+		}
+
+		key = strings.TrimSpace(key)
+		value = strings.TrimSpace(value)
+		value = strings.Trim(value, `"'`)
+
+		if key == "" || os.Getenv(key) != "" {
+			continue
+		}
+
+		_ = os.Setenv(key, value)
+	}
 }
